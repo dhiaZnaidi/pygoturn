@@ -86,18 +86,24 @@ def main():
 
     # load datasets
     alov = ALOVDataset(os.path.join(args.data_directory,
-                       'images/'),
+                       'images_alov/'),
                        os.path.join(args.data_directory,
-                       'gt/'),
+                       'gt_alov/'),
                        transform, input_size)
-    
+    imagenet = ILSVRC2014_DET_Dataset(os.path.join(args.data_directory,
+                                      'images_imagenet/'),
+                                      os.path.join(args.data_directory,
+                                      'gt_imagenet/'),
+                                      bb_params,
+                                      transform,
+                                      input_size)
     # list of datasets to train on
-    datasets = alov
+    datasets = [alov, imagenet]
 
     # load model
     net = model.GoNet().to(device)
     # summary(net, [(3, 224, 224), (3, 224, 224)])
-    loss_fn = torch.nn.MSELoss(size_average=False).to(device)
+    loss_fn = torch.nn.L1Loss(size_average=False).to(device)
 
     # initialize optimizer
     optimizer = optim.SGD(net.classifier.parameters(),
