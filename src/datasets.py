@@ -261,6 +261,7 @@ class ILSVRC2014_DET_Dataset(Dataset):
         Range of valid index: [0, self.len-1].
         """
         curr = cv2.imread(self.x[idx])
+
         curr = bgr2rgb(curr)
         currbb = self.y[idx]
         sample = {'image': curr, 'bb': currbb}

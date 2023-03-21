@@ -23,7 +23,7 @@ batchSize = 50  # number of samples in a batch
 kGeneratedExamplesPerImage = 10  # generate 10 synthetic samples per image
 transform = NormalizeToTensor()
 bb_params = {}
-enable_tensorboard = False
+enable_tensorboard = True
 if enable_tensorboard:
     from tensorboardX import SummaryWriter
     writer = SummaryWriter()
@@ -43,10 +43,10 @@ parser.add_argument('--weight_decay', default=0.0005, type=float,
 parser.add_argument('--lr-decay-step', default=100000, type=int,
                     help='number of steps after which learning rate decays')
 parser.add_argument('-d', '--data-directory', type=str,
-                    default='../data/',
+                    default='/content/pygoturn/VOT/',
                     help='path to data directory')
 parser.add_argument('-s', '--save-directory', type=str,
-                    default='../saved_checkpoints/exp3/',
+                    default='/content/pygoturn/saved_checkpoints/exp3/',
                     help='path to save directory')
 parser.add_argument('-lshift', '--lambda-shift-frac', default=5, type=float,
                     help='lambda-shift for random cropping')
