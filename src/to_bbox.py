@@ -3,7 +3,9 @@ import argparse
 import os
 from glob import glob
 import shutil
-
+from PIL import Image
+import cv2
+import re
 #args = None
 #parser = argparse.ArgumentParser(description='Mask2Box Tranformation')
 #parser.add_argument('-t', '--transform',
@@ -20,7 +22,6 @@ def rearrange_files(parent_folder):
 
     # list of file paths
     files = sorted(glob(parent_folder+'/*'))
-    print(files)
     # create a dictionary to group files by name
     files_dict = {}
     for file in files:
@@ -56,10 +57,8 @@ def get_bounding_box(mask,transform = None):
 
     rows = np.any(mask, axis=1)
     cols = np.any(mask, axis=0)
-    x_min, y_min = np.argwhere(rows)[[0, 0]]
-    x_max, y_max = np.argwhere(rows)[[-1, -1]]
-    x_min, y_min = x_min, np.argwhere(cols)[[0, 0]]
-    x_max, y_max = x_max, np.argwhere(cols)[[-1, -1]]
+    y_min, y_max = np.where(rows)[0][[0, -1]]
+    x_min, x_max = np.where(cols)[0][[0, -1]]
     if transform == None : 
         return x_min, y_min, x_max, y_max
     elif transform == "to_wh" :
@@ -104,5 +103,22 @@ if __name__ == "__main__":
     #args = parser.parse_args()
     #print(args)
     print(os.getcwd())
-    rearrange_files(os.getcwd()+'sequences-train/sequences-train')
+    parent_folder = os.getcwd()+'/sequences-test/sequences-test'
+    #rearrange_files(parent_folder)
+    for folder in sorted(os.listdir(parent_folder)):
+        masks = sorted(glob(parent_folder+'/'+folder+'/*.png'))
+        with open(parent_folder+'/'+folder+'.ann','a') as f : 
+            for mask_file in masks : 
+                print()
+                mask = Image.open(mask_file)
+                mask = np.int_(np.array(mask)/255)
+                print(mask_file,type(mask),mask.shape,np.max(mask),np.min(mask))
+                x,y,w,h = get_bounding_box(mask,transform = 'to_wh')
+                f.write(f'{x},{y},{w},{h}\n')
+        f.close()
+
+    
+            
+
+
     

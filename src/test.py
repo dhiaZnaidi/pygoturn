@@ -42,7 +42,7 @@ class GOTURN:
         frames = np.array(frames)
         frames.sort()
         self.x = []
-        f = open(root_dir + '/groundtruth_rect.txt')
+        f = open(root_dir + '/fish.ann')
         lines = f.readlines()
         lines[0] = re.sub('\t', ',', lines[0])
         lines[0] = re.sub(' +', ',', lines[0])

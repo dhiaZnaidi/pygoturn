@@ -14,7 +14,7 @@ parser.add_argument('-d', '--data-directory',
                     default='../data/OTB/Man', type=str,
                     help='path to video frames')
 parser.add_argument('-s', '--save-directory',
-                    default='../result',
+                    default='./result',
                     type=str, help='path to save directory')
 
 
@@ -75,7 +75,7 @@ def main(args):
     # save initial frame with bounding box
     save(tester.img[0][0], tester.prev_rect, tester.prev_rect, 1)
     tester.model.eval()
-
+    mean_IoU = 0
     # loop through sequence images
     for i in range(tester.len):
         # get torch input tensor
@@ -91,8 +91,10 @@ def main(args):
         save(im, bb, gt_bb, i+2)
 
         # print stats
+        mean_IoU +=axis_aligned_iou(gt_bb, bb)
         print('frame: %d, IoU = %f' % (
             i+2, axis_aligned_iou(gt_bb, bb)))
+    print("Average IoU for Cow Video : ", mean_IoU/tester.len)
 
 
 if __name__ == "__main__":
